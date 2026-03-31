@@ -17,7 +17,7 @@
 
 // ---------------------------------------------------------- private defines --
 
-#define __ILI9341_TOUCH_NORM_SOUND_SAMPLES__ 8U
+#define __ILI9341_TOUCH_NORM_SAMPLES__ 8U
 
 // ----------------------------------------------------------- private macros --
 
@@ -231,14 +231,14 @@ ili9341_touch_pressed_t ili9341_touch_coordinate(ili9341_t *lcd,
   if (NULL == lcd)
     { return itpNONE; }
 
-  uint16_t req_SOUND_SAMPLES;
+  uint16_t req_samples;
   switch (lcd->touch_normalize) {
     default:
     case itnNotNormalized:
-      req_SOUND_SAMPLES = 1;
+      req_samples = 1;
       break;
     case itnNormalized:
-      req_SOUND_SAMPLES = __ILI9341_TOUCH_NORM_SOUND_SAMPLES__;
+      req_samples = __ILI9341_TOUCH_NORM_SAMPLES__;
       break;
   }
 
@@ -250,8 +250,8 @@ ili9341_touch_pressed_t ili9341_touch_coordinate(ili9341_t *lcd,
   uint32_t x_avg = 0U;
   uint32_t y_avg = 0U;
 
-  uint16_t sample = req_SOUND_SAMPLES;
-  uint16_t num_SOUND_SAMPLES = 0U;
+  uint16_t sample = req_samples;
+  uint16_t num_samples = 0U;
 
   // change SPI clock to 2MHz, max rate supported by XPT2046
   // TODO: based on STM32G4, which is clocked at 170MHz. support other chips.
@@ -273,23 +273,20 @@ ili9341_touch_pressed_t ili9341_touch_coordinate(ili9341_t *lcd,
     x_avg += __LEu16(x_raw) >> 3;
     y_avg += __LEu16(y_raw) >> 3;
 
-    ++num_SOUND_SAMPLES;
+    ++num_samples;
   }
   HAL_SPI_Transmit(lcd->spi_hal, (uint8_t*)sleep, sizeof(sleep), __SPI_MAX_DELAY__);
 
   ili9341_spi_touch_release(lcd);
 
   // restore SPI clock to maximum for TFT
-  // TODO: based on STM32G4, which is clocked at 170MHz. support other chips.
   MODIFY_REG(lcd->spi_hal->Instance->CR1, SPI_CR1_BR, SPI_BAUDRATEPRESCALER_4);
 
-  if (num_SOUND_SAMPLES < req_SOUND_SAMPLES)
+  if (num_samples < req_samples)
     { return itpNotPressed; }
 
-  //UART_Printf("raw_x: %d, raw_y, %d\r\n", x_avg / req_SOUND_SAMPLES, y_avg / req_SOUND_SAMPLES);
-
   ili9341_two_dimension_t coord =
-      ili9341_project_touch_coordinate(lcd, x_avg / req_SOUND_SAMPLES, y_avg / req_SOUND_SAMPLES);
+      ili9341_project_touch_coordinate(lcd, x_avg / req_samples, y_avg / req_samples);
 
   *x_pos = coord.x;
   *y_pos = coord.y;

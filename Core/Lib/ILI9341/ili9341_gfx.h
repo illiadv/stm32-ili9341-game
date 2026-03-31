@@ -125,7 +125,7 @@ void ili9341_draw_bitmap_1b(ili9341_t *lcd,
     ili9341_color_t fg_color, ili9341_color_t bg_color,
     int16_t x, int16_t y, uint16_t w, uint16_t h, uint8_t *bmp);
 
-// Додаткові функції для потреб проекту
+// New functions added for my project
 
 void ili9341_my_draw_bmp(ili9341_t *lcd, ili9341_color_t color, ili9341_color_t color2,
     int16_t x, int16_t y, uint16_t w, uint16_t h, uint8_t *bmp);
@@ -136,7 +136,6 @@ void ili9341_my_draw_bmp_2b(ili9341_t *lcd, ili9341_color_t color, ili9341_color
 ili9341_bool_t ili9341_my_clip_rect(ili9341_t *lcd,
     int16_t *x, int16_t *y, uint16_t *w, uint16_t *h);
 
-// Кінець додаткових функцій
 
 void ili9341_draw_char(ili9341_t *lcd, ili9341_text_attr_t attr, char ch);
 void ili9341_draw_string(ili9341_t *lcd, ili9341_text_attr_t attr, char str[]);
