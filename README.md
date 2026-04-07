@@ -10,6 +10,8 @@ This device was created as part of a thesis titled "An interactive game for STM3
 
 Dev board used is STM32 NUCLEO-F303RE.
 
+For the ILI9341 display, a [fork](https://github.com/illiadv/ILI9341-STM32-HAL) of [this library](https://github.com/ardnew/ILI9341-STM32-HAL) is used.
+
 The game is a classic space shooter where you fight enemies and get score points.
 
 ![gameplay](./extra/images/photo_gameplay.jpg)
